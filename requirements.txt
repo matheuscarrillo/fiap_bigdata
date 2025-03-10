@@ -1,4 +1,9 @@
 selenium
 boto3
-yaml
+pyyaml
 pandas
+pyarrow
+numpy
+webdriver_manager
+wget
+openpyxl
