@@ -1,0 +1,23 @@
+{
+    "Comment": "A description of my state machine",
+    "StartAt": "processing",
+    "States": {
+      "processing": {
+        "Type": "Task",
+        "Resource": "arn:aws:states:::glue:startJobRun.sync",
+        "Arguments": {
+          "JobName": "processing"
+        },
+        "Next": "democratiza_tabela_refined"
+      },
+      "democratiza_tabela_refined": {
+        "Type": "Task",
+        "Resource": "arn:aws:states:::glue:startJobRun",
+        "Arguments": {
+          "JobName": "democratiza_tabela_refined"
+        },
+        "End": true
+      }
+    },
+    "QueryLanguage": "JSONata"
+  }

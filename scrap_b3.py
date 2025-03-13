@@ -80,10 +80,11 @@ for arquivo in os.listdir(download_dir):
                 encoding="ISO-8859-1",
                 on_bad_lines="skip",
                 skiprows=2,  # Pula a linha do título e cabeçalho
-                names=["Código", "Ação", "Tipo", "Qtde. Teórica", "Part. (%)"], 
                 dtype={"Código": str, "Ação": str, "Tipo": str, "Qtde. Teórica": str, "Part. (%)": str},
                 usecols=[0, 1, 2, 3, 4]  # Considera apenas as colunas esperadas
             )
+
+            df.columns = ['codigo', 'acao', 'tipo', 'qtd_teorica', 'part']
            
             parquet_filename = arquivo.replace(".csv", ".parquet")
             buffer = BytesIO()

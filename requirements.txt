@@ -2,3 +2,4 @@ selenium
 boto3
 yaml
 pandas
+pyarrow
