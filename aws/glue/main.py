@@ -1,0 +1,4 @@
+from democratiza_tabela_refined import democratiza_tabela_refined
+from processing import processing
+processing()
+democratiza_tabela_refined()
