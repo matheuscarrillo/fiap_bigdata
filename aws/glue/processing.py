@@ -1,27 +1,14 @@
 import sys
 import logging
 from awsglue.transforms import *
-from awsglue.utils import getResolvedOptions
-from pyspark.context import SparkContext
-from awsglue.context import GlueContext
-from awsglue.job import Job
 from pyspark.sql.functions import *
 from pyspark.sql.window import Window
 from datetime import datetime, timedelta
 
 
-
-def processing():
+def processing(spark):
     ## @params: [JOB_NAME]
-    args = getResolvedOptions(sys.argv, ['JOB_NAME'])
-
-    sc = SparkContext()
-    glueContext = GlueContext(sc)
-    spark = glueContext.spark_session
-    job = Job(glueContext)
-    job.init(args['JOB_NAME'], args)
-
-
+   
     # configura o Logger
     logger = logging.getLogger()
     logger.setLevel(logging.INFO)
@@ -40,12 +27,19 @@ def processing():
     dia_anterior_formatado = dia_anterior.strftime("%d-%m-%y")
 
     logger.info("lendo tabela raw")
-    df = spark.read.parquet(f"s3://raw-209112358514/b3/date={dia_anterior_formatado}/")
+    df = spark.read.parquet(f"s3://raw-209112358514/b3/")
     df.show(1)
+    df.printSchema()
 
     logger.info("renomeando o nome das colunas")
-    df_transformed = df.withColumnRenamed("codigo", "papel")
-    df_transformed = df_transformed.withColumnRenamed("part", "part_pct")
+
+    df_transformed = df.withColumnRenamed("Qtde. Teórica", "qtd_teorica")
+    df_transformed = df_transformed.withColumnRenamed("Part. (%)", "part_pct")
+    df_transformed = df_transformed.withColumnRenamed("Código", "papel")
+    df_transformed = df_transformed.withColumnRenamed("Tipo", "tipo")
+    df_transformed = df_transformed.withColumnRenamed("Ação", "acao")
+    df_transformed.printSchema()
+
 
     logger.info("tratando campo em texto, transformando para valor numérico")
     df_transformed = df_transformed.withColumn("qtd_teorica",regexp_replace(col("qtd_teorica"), "\\.", "").cast("bigint")) # Remove pontos e converte para inteiro
@@ -96,5 +90,3 @@ def processing():
     df_joined.write.mode("overwrite").partitionBy("date", "papel").parquet(output_path)
 
     logger.info("Dados salvos com sucesso no S3!")
-
-    job.commit()

@@ -1,13 +1,8 @@
-import sys
 import logging
 import boto3
-from awsglue.context import GlueContext
-from awsglue.utils import getResolvedOptions
-from awsglue.job import Job
-from pyspark.context import SparkContext
 from pyspark.sql.functions import current_date, date_format
 
-def democratiza_tabela_refined():
+def democratiza_tabela_refined(spark):
     # configura o Logger
     logger = logging.getLogger()
     logger.setLevel(logging.INFO)
@@ -18,17 +13,6 @@ def democratiza_tabela_refined():
     console_handler.setFormatter(formatter)
     logger.addHandler(console_handler)
 
-    # parâmetros de execução do Glue (se houver)
-    args = getResolvedOptions(sys.argv, ['JOB_NAME'])
-
-    # configura o SparkContext e o GlueContext
-    sc = SparkContext()
-    glueContext = GlueContext(sc)
-    spark = glueContext.spark_session
-
-    # inicializando o job Glue
-    job = Job(glueContext)
-    job.init(args['JOB_NAME'], args)
 
     # obtenção da série temporal do preço do petróleo bruto
     raw_data_path = "s3://refined-209112358514/b3/"
@@ -108,5 +92,3 @@ def democratiza_tabela_refined():
     spark.sql(repair_table_query)
     logger.info(f"Comando MSCK REPAIR TABLE executado com sucesso para a tabela '{table_name}'.")
 
-    # finaliza o job Glue
-    job.commit()
