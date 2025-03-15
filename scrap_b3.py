@@ -121,10 +121,10 @@ from webdriver_manager.chrome import ChromeDriverManager
 import os
 
 
-# Diretório temporário no Lambda
+# Diretório temporário no ECS
 download_dir = "/tmp"
 
-# Configurar opções do Chrome para ambiente Lambda
+# Configurar opções do Chrome para ambiente ECS
 print("Iniciando execução do driver...")  # Log de depuração
 options = webdriver.ChromeOptions()
 options.add_argument("--no-sandbox")
