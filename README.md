@@ -36,6 +36,8 @@ Este script **scrap_b3.py** realiza a extração de uma tabela do site da **B3**
 - **CSV** (arquivo bruto extraído do site)
 - **Parquet** (com algumas transformações e particionado por data)
 
+Existe um **EventBridge** agendado para executar, diariamente às 12h, uma tarefa **ECS Fargate** responsável por coletar dados do site da **B3**. Essa tarefa utiliza uma imagem Docker armazenada no Amazon ECR, garantindo escalabilidade e execução sem necessidade de gerenciamento de servidores.
+
 ## **Execução do Script**
 ### **1. Inicialização do Web Scraping**
 O script inicia configurando o **ChromeDriver** para rodar no modo **headless** (sem interface gráfica) e desativando algumas funcionalidades para melhorar a compatibilidade com execução em ambientes na nuvem.
@@ -161,3 +163,20 @@ A função Lambda invoca o AWS Glue assim que o arquivo é gerado no S3, inician
 O caminho de saída para os dados no S3 é configurado como `s3://refined-209112358514/b3`, onde os dados são armazenados em formato Parquet.
 
 # Estrutura do Repositório
+
+```plaintext
+.
+├── scrap_b3.py
+├── DockerFile
+├── requirements.txt
+└── aws/
+    ├── glue
+       ├── democratiza_tabela_refined.py
+       ├── processing.py
+       ├── main.py
+    ├── lambda
+       └── lambda_call_glue.py
+    ├── eventbridge
+       └── schedule_ecs_fargate.json
+
+```
