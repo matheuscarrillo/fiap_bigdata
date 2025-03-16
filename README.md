@@ -160,4 +160,4 @@ A função Lambda invoca o AWS Glue assim que o arquivo é gerado no S3, inician
 
 O caminho de saída para os dados no S3 é configurado como `s3://refined-209112358514/b3`, onde os dados são armazenados em formato Parquet.
 
-## Estrutura do Repositório
+# Estrutura do Repositório
