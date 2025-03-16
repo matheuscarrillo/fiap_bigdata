@@ -1,0 +1,40 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "CloudFormation template for EventBridge Rulescheduled_lambda_scrapping_b3_2",
+    "Resources": {
+      "Rulef007eb42": {
+        "Type": "AWS::Events::Rule",
+        "Properties": {
+          "Name": "scheduled_lambda_scrapping_b3_2",
+          "ScheduleExpression": "cron(0 12 * * ? *)",
+          "State": "ENABLED",
+          "EventBusName": "default",
+          "Targets": [{
+            "Id": "Idb92788d8-a04d-4517-a850-712e0b3af9f9",
+            "Arn": {
+              "Fn::Sub": "arn:${AWS::Partition}:ecs:${AWS::Region}:${AWS::AccountId}:cluster/repo-b3-cluster"
+            },
+            "RoleArn": "arn:aws:iam::209112358514:role/service-role/Amazon_EventBridge_Invoke_ECS_265686612",
+            "EcsParameters": {
+              "TaskDefinitionArn": "arn:aws:ecs:us-east-1:209112358514:task-definition/scrapping-s3-new-version",
+              "TaskCount": 1,
+              "LaunchType": "FARGATE",
+              "NetworkConfiguration": {
+                "awsvpcConfiguration": {
+                  "Subnets": ["subnet-0d697097e14a95889", "subnet-085b086695aa86559", "subnet-0c0e71bd2bcebe7", "subnet-0dd282ba43eb250467a"],
+                  "AssignPublicIp": "ENABLED"
+                }
+              },
+              "CapacityProviderStrategy": [],
+              "EnableECSManagedTags": true,
+              "EnableExecuteCommand": false,
+              "PlacementConstraints": [],
+              "PlacementStrategy": [],
+              "Tags": []
+            }
+          }]
+        }
+      }
+    },
+    "Parameters": {}
+  }
